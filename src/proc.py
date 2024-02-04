@@ -83,7 +83,6 @@ def lastoperations(fn: object) -> object:
         m_to = inscription(sorted_pay[i][3])
         dt_string = sorted_pay[i][0].strftime("%d.%m.%Y")
         print(f"{dt_string} {sorted_pay[i][1]}")
-        print(f"{sorted_pay[i][2]} -> {sorted_pay[i][3]}")
         print(f"{m_from} -> {m_to}")
         print(f"{sorted_pay[i][4]} {sorted_pay[i][5]}")
         print()
