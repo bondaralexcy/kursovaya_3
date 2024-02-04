@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "kurs-3"
+version = "0.1.0"
+description = ""
+authors = ["Aleksey Bondarenko <bondaralexcy.gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+proc = "^1.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-cov = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
