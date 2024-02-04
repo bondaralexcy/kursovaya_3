@@ -1,7 +1,6 @@
 import json
 import datetime
 
-
 def read_json_file(fn):
     """
     Функция открывает JSON-файл и сохраняет его в список paymnt
@@ -50,13 +49,18 @@ def inscription(src):
     Функция закрывает информацию о номере счета или карты
     """
     m_value = ""
+
     if src is None:
         m_value = 'Наличные'
+    elif ''.join(c if c.isdigit() else '' for c in src) == '':
+        m_value = 'Нет данных'
     elif "Счет" in src:
-        m_value = '**' + src[-4:]
+        account = ''.join(c if c.isdigit() else '' for c in src)
+        m_value = '**' + account[-4:]
     elif (not (not ('Visa' in src) and not ('Maestro' in src) and not (
             'Master' in src))):
-        m_value = src[-16:-12] + ' ' + src[-12:-10] + '** **** **** ' + src[-4:]
+        account = ''.join(c if c.isdigit() else '' for c in src)
+        m_value = account[-16:-12] + ' ' + account[-12:-10] + '** **** **** ' + account[-4:]
     else:
         m_value = src
 
@@ -79,8 +83,8 @@ def lastoperations(fn: object) -> object:
         m_to = inscription(sorted_pay[i][3])
         dt_string = sorted_pay[i][0].strftime("%d.%m.%Y")
         print(f"{dt_string} {sorted_pay[i][1]}")
+        print(f"{sorted_pay[i][2]} -> {sorted_pay[i][3]}")
         print(f"{m_from} -> {m_to}")
         print(f"{sorted_pay[i][4]} {sorted_pay[i][5]}")
         print()
         i += 1
-
