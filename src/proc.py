@@ -1,16 +1,56 @@
 import json
 import datetime
+import os
+
+def lastoperations(fn: str) -> object:
+    """
+    функция выводит на экран список из 5 последних выполненных
+    клиентом операций в формате:
+    <дата перевода> <описание перевода>
+    <откуда> -> <куда>
+    <сумма перевода> <валюта>
+    """
+
+    if os.path.exists(fn):
+        payments: list = read_json_file(fn)
+        if payments != []:
+            sorted_pay = sort_list(payments)
+            i = 0
+            print()
+            while i < 5:
+                m_from = inscription(sorted_pay[i][2])
+                m_to = inscription(sorted_pay[i][3])
+                dt_string = sorted_pay[i][0].strftime("%d.%m.%Y")
+                print(f"{dt_string} {sorted_pay[i][1]}")
+                print(f"{m_from} -> {m_to}")
+                print(f"{sorted_pay[i][4]} {sorted_pay[i][5]}")
+                print()
+                i += 1
+        else:
+
+            return []
+
+    else:
+
+        return []
+
 
 def read_json_file(fn):
     """
-    Функция открывает JSON-файл и сохраняет его в список paymnt
+    Функция открывает и читает JSON-файл в кодировке utf-8 и сохраняет его в список paymnt
     :type fn: имя файла
     """
-    # paymnt = {}
-    with open(fn) as f:
-        paymnt = json.load(f)
 
-    return paymnt
+    if fn[-4:] == 'json':
+            with open(fn, "r", encoding="utf-8") as f:
+                # загружаем структуру из файла
+                paymnt = json.load(f)
+
+            return paymnt
+
+    else:
+        return []
+
 
 def get_date(dt):
     """
@@ -18,9 +58,16 @@ def get_date(dt):
     :param dt: строка типа: '2019-12-08T22:46:21.935582'
     :return: дата в формате 'YYYY-mm-dd'
     """
-    date_time_obj = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S.%f')
-    dt_str = date_time_obj.date()
-    return dt_str
+    if len(dt) == len('2019-12-08T22:46:21.935582'):
+        date_time_obj = datetime.datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S.%f')
+        dt_str = date_time_obj.date()
+        return dt_str
+
+    elif dt == '':
+        return ''
+
+    else:
+        return datetime.date(1900, 1, 1)
 
 
 def sort_list(pnmt):
@@ -52,38 +99,36 @@ def inscription(src):
 
     if src is None:
         m_value = 'Наличные'
-    elif ''.join(c if c.isdigit() else '' for c in src) == '':
+    elif without_alfa(src) == '':
         m_value = 'Нет данных'
     elif "Счет" in src:
-        account = ''.join(c if c.isdigit() else '' for c in src)
-        m_value = '**' + account[-4:]
+        account = without_alfa(src)
+        m_value = without_digit(src) + '**' + account[-4:]
     elif (not (not ('Visa' in src) and not ('Maestro' in src) and not (
             'Master' in src))):
-        account = ''.join(c if c.isdigit() else '' for c in src)
-        m_value = account[-16:-12] + ' ' + account[-12:-10] + '** **** **** ' + account[-4:]
+        account = without_alfa(src)
+        m_value = without_digit(src) + account[-16:-12] + ' ' + account[-12:-10] + '** **** **** ' + account[-4:]
     else:
         m_value = src
 
     return m_value
 
-def lastoperations(fn: object) -> object:
+
+def without_digit(st):
     """
-    функция выводит на экран список из 5 последних выполненных
-    клиентом операций в формате:
-    <дата перевода> <описание перевода>
-    <откуда> -> <куда>
-    <сумма перевода> <валюта>
+    Функция извлекает из строки только буквы и пробелы
+
     """
-    payments: list = read_json_file(fn)
-    sorted_pay = sort_list(payments)
-    i = 0
-    print()
-    while i < 5:
-        m_from = inscription(sorted_pay[i][2])
-        m_to = inscription(sorted_pay[i][3])
-        dt_string = sorted_pay[i][0].strftime("%d.%m.%Y")
-        print(f"{dt_string} {sorted_pay[i][1]}")
-        print(f"{m_from} -> {m_to}")
-        print(f"{sorted_pay[i][4]} {sorted_pay[i][5]}")
-        print()
-        i += 1
+    new_s = ''.join([a for a in st if a.isalpha() or a ==' '])
+    return new_s
+
+
+def without_alfa(st):
+    """
+    Функция извлекает из строки только цифры
+    """
+    new_s = ''.join(c if c.isdigit() else '' for c in st)
+    return new_s
+
+
+lastoperations('file.txt')
