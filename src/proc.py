@@ -27,11 +27,9 @@ def lastoperations(fn: str) -> object:
                 print()
                 i += 1
         else:
-
             return []
 
     else:
-
         return []
 
 
