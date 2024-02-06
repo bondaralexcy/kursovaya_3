@@ -9,6 +9,7 @@ def lastoperations(fn: str) -> object:
     <дата перевода> <описание перевода>
     <откуда> -> <куда>
     <сумма перевода> <валюта>
+
     """
 
     if os.path.exists(fn):

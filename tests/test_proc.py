@@ -5,7 +5,9 @@ from src import proc
 
 
 def test_get():
-    assert proc.get_date('2019-12-08T22:46:21.935582') == datetime.date(2019, 12, 8)
+"""
+Тестовые программы
+"""    assert proc.get_date('2019-12-08T22:46:21.935582') == datetime.date(2019, 12, 8)
     assert proc.get_date('2020-01-01T22:46:21.935582') == datetime.date(2020, 1, 1)
     assert proc.get_date('2020-01-01') == datetime.date(1900, 1, 1)
     assert proc.get_date('') == ''
